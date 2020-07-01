@@ -11,7 +11,7 @@ app.use(express.json({ extended: false }));
 
 //Routes
 
-app.use('/short', require('./routes/index'));
+app.use('/', require('./routes/index'));
 app.use('/api/url', require('./routes/url'));
 
 if (process.env.NODE_ENV === 'production') { 
