@@ -26,7 +26,6 @@ router.post("/shorten", (req, res) => {
       .then((data) => {
         //console.log(data);
         if (data) {
-          console.log("url exists");
           res.json(data);
         } else {
           const shortUrl = baseUrl + "/sm/" + urlCode;
@@ -37,7 +36,6 @@ router.post("/shorten", (req, res) => {
             urlCode,
             date: new Date(),
           });
-          console.log("url does not exist");
           newUrl.save().then(() => res.json(newUrl));
         }
       })

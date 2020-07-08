@@ -7,16 +7,18 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Alert from "react-bootstrap/Alert";
-// import FormGroup from 'react-bootstrap/FormGroup'
-// import FormLabel from 'react-bootstrap/FormLabel'
-// import Input from 'react-bootstrap/Input'
+import axios from 'axios'
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
 
 function App() {
   const [validated, setValidated] = useState(false);
   const [longUrl, setLongUrl] = useState("");
-  const [alert, setAlert] = useState({ message: "This is a success alert.", variant: "success" });
+  const [customId, setCustomId] = useState("");
+  const [alert, setAlert] = useState({
+    message: "This is a success alert.",
+    variant: "success",
+  });
   const BaseUrl = "http://localhost:3000/sm/";
 
   const handleSubmit = (e) => {
@@ -24,25 +26,44 @@ function App() {
     e.preventDefault();
 
     if (form.checkValidity() === false) e.stopPropagation();
+    else requestShortUrl(longUrl, customId);
 
     console.log(longUrl);
     setValidated(true);
   };
 
+  const resetForm = () => {
+    setCustomId("");
+    setLongUrl("");
+    setValidated(false);
+  };
+
+  const requestShortUrl = (longUrl, customId) => { 
+    axios.post("http://localhost:3200/api/url/shorten", { 
+      longUrl: longUrl, 
+      customId: customId
+    })
+    .then((res) => { 
+      console.log(res)
+      resetForm();
+    })
+  }
   return (
     <Container fluid className="bg-dark">
       {alert && (
-        <Row className="alert-fixed">
-          <Col>
-            
-                <Alert dismissible variant={alert.variant}>
-                  {alert.message}
-                </Alert>
-              
+        <Row className="alert-fixed w-100 justify-content-md-center">
+          <Col xl={6} large={12} sm={12} md={12}>
+            <Alert
+              dismissible
+              variant={alert.variant}
+              className="local-max-width-alert"
+              onClose={() => setAlert(undefined)}
+            >
+              {alert.message}
+            </Alert>
           </Col>
         </Row>
       )}
-      
 
       <Form
         noValidate
@@ -81,10 +102,20 @@ function App() {
               <InputGroup.Text>{BaseUrl}</InputGroup.Text>
             </InputGroup.Prepend>
 
-            <Form.Control type="text" placeholder="Optional" />
+            <Form.Control
+              type="text"
+              placeholder="Optional"
+              value={customId}
+              onChange={(e) => setCustomId(e.target.value)}
+            />
           </InputGroup>
         </Form.Group>
-        <Button type="reset" variant="secondary" className="btn-lg btn-block">
+        <Button
+          type="reset"
+          variant="secondary"
+          className="btn-lg btn-block"
+          onClick={resetForm}
+        >
           Clear
         </Button>
         <Button type="submit" className="btn-lg btn-block">

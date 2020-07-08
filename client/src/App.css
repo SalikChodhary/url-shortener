@@ -24,6 +24,9 @@
   z-index:9999; 
 }
 
+.local-max-width-alert { 
+  max-width: 1440px;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server", 
-    "client": "npm start --prefix client", 
-    "start:dev": "concurrently \"npm run server\" \"npm run client\" ", 
+    "server": "nodemon server",
+    "client": "npm start --prefix client",
+    "start:dev": "concurrently \"npm run server\" \"npm run client\" ",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false  npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
@@ -23,6 +23,7 @@
   "dependencies": {
     "concurrently": "^5.2.0",
     "config": "^3.3.1",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.9.20",
     "shortid": "^2.2.15",
