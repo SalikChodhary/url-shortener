@@ -10,7 +10,7 @@
   max-width: 450px;
   padding: 15px;
   margin: auto; 
-  height: 100%;
+
   
 }
 .mh-100vh { 
@@ -26,6 +26,18 @@
 
 .local-max-width-alert { 
   max-width: 1440px;
+}
+
+.test { 
+  width: 100%;
+  max-width: 450px;
+  padding: 15px;
+  margin: auto; 
+
+  
+}
+.margin-top-15px { 
+  margin-top: 15px;
 }
 @keyframes App-logo-spin {
   from {

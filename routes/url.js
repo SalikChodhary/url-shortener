@@ -8,16 +8,20 @@ const Url = require("../models/Url");
 
 // @route   POST /api/url/shorten
 // @desc    Create short url
-router.post("/shorten", (req, res) => {
+router.post("/shorten", async (req, res) => {
   const { longUrl, customId } = req.body;
+  const baseUrl = process.env.NODE_ENV === 'production' ? config.get("prodBaseUrl") : config.get("devBaseUrl");
   
-  const baseUrl = config.get("baseUrl");
-
   if (!validUrl.isUri(baseUrl)) {
     //console.log(baseUrl)
-    return res.status(401).json("Invalid base url");
+    return res.status(500).json("Sorry, encountered server error!");
   }
-
+  if (customId) {  
+    //Could check with custom ID instead, but that ignores dev and prod server differences.
+    if (await Url.findOne({ shortUrl: baseUrl + "/sm/" + customId})) {  
+      return res.status(409).json("This custom ID is already in use! Please use another custom ID.")
+    }
+  }
   const urlCode = customId ? customId : shortId.generate();
 
   if (validUrl.isUri(longUrl)) {
@@ -29,7 +33,6 @@ router.post("/shorten", (req, res) => {
           res.json(data);
         } else {
           const shortUrl = baseUrl + "/sm/" + urlCode;
-
           const newUrl = new Url({
             longUrl,
             shortUrl,
@@ -44,7 +47,7 @@ router.post("/shorten", (req, res) => {
         res.status(500).json("Server Error");
       });
   } else {
-    res.status(401).json("Invalid long URL");
+    res.status(500).json("Sorry, encountered server error!");
   }
 });
 

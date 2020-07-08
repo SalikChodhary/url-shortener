@@ -7,7 +7,8 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Alert from "react-bootstrap/Alert";
-import axios from 'axios'
+import Table from "react-bootstrap/Table";
+import axios from "axios";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -15,10 +16,9 @@ function App() {
   const [validated, setValidated] = useState(false);
   const [longUrl, setLongUrl] = useState("");
   const [customId, setCustomId] = useState("");
-  const [alert, setAlert] = useState({
-    message: "This is a success alert.",
-    variant: "success",
-  });
+  const [alert, setAlert] = useState(undefined);
+  const [links, setLinks] = useState([]);
+
   const BaseUrl = "http://localhost:3000/sm/";
 
   const handleSubmit = (e) => {
@@ -38,18 +38,30 @@ function App() {
     setValidated(false);
   };
 
-  const requestShortUrl = (longUrl, customId) => { 
-    axios.post("http://localhost:3200/api/url/shorten", { 
-      longUrl: longUrl, 
-      customId: customId
-    })
-    .then((res) => { 
-      console.log(res)
-      resetForm();
-    })
-  }
+  const requestShortUrl = (longUrl, customId) => {
+    axios
+      .post("http://localhost:3200/api/url/shorten", {
+        longUrl: longUrl,
+        customId: customId,
+      })
+      .then((res) => {
+        setAlert({
+          message: `A new short URL has been created!`,
+          variant: "success",
+        });
+        setLinks([
+          ...links,
+          { longUrl: res.data.longUrl, shortUrl: res.data.shortUrl },
+        ]);
+        resetForm();
+      })
+      .catch((err) => {
+        setAlert({ message: err.response.data, variant: "danger" });
+        resetForm();
+      });
+  };
   return (
-    <Container fluid className="bg-dark">
+    <Container fluid className="bg-dark mh-100vh">
       {alert && (
         <Row className="alert-fixed w-100 justify-content-md-center">
           <Col xl={6} large={12} sm={12} md={12}>
@@ -69,7 +81,7 @@ function App() {
         noValidate
         validated={validated}
         onSubmit={handleSubmit}
-        className="shortener-form text-white mh-100vh"
+        className="shortener-form text-white"
       >
         <Container className="text-center">
           <Row>
@@ -121,6 +133,26 @@ function App() {
         <Button type="submit" className="btn-lg btn-block">
           Create Short URL
         </Button>
+        {links.length > 0 && (
+        <Table striped responsive variant="dark" className="margin-top-15px">
+          <thead>
+            <tr>
+              <th>Short URL</th>
+              <th>Long URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {links.map((link, i) => (
+              <tr key={i}>
+                <td>
+                  <a href={link.shortUrl}>{link.shortUrl}</a>
+                </td>
+                <td>{link.longUrl}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
       </Form>
     </Container>
   );
