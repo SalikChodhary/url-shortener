@@ -68,7 +68,7 @@ function App() {
     <Container fluid className="bg-dark mh-100vh">
       {alert && (
         <Row className="alert-fixed w-100 justify-content-center">
-          <Col xl={6} large={11} sm={11} md={11}>
+          <Col xl={6} large={12} sm={12} md={12}>
             <Alert
               dismissible
               variant={alert.variant}
