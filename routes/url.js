@@ -9,7 +9,8 @@ const Url = require("../models/Url");
 // @route   POST /api/url/shorten
 // @desc    Create short url
 router.post("/shorten", (req, res) => {
-  const { longUrl } = req.body;
+  const { longUrl, customId } = req.body;
+  
   const baseUrl = config.get("baseUrl");
 
   if (!validUrl.isUri(baseUrl)) {
@@ -17,7 +18,7 @@ router.post("/shorten", (req, res) => {
     return res.status(401).json("Invalid base url");
   }
 
-  const urlCode = shortId.generate();
+  const urlCode = customId ? customId : shortId.generate();
 
   if (validUrl.isUri(longUrl)) {
     let url = Url.findOne({ longUrl });
@@ -28,7 +29,7 @@ router.post("/shorten", (req, res) => {
           console.log("url exists");
           res.json(data);
         } else {
-          const shortUrl = baseUrl + "/" + urlCode;
+          const shortUrl = baseUrl + "/sm/" + urlCode;
 
           const newUrl = new Url({
             longUrl,

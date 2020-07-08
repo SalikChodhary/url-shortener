@@ -11,7 +11,7 @@ app.use(express.json({ extended: false }));
 
 //Routes
 
-app.use('/', require('./routes/index'));
+app.use('/sm', require('./routes/index'));
 app.use('/api/url', require('./routes/url'));
 
 if (process.env.NODE_ENV === 'production') { 
@@ -22,6 +22,6 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-const PORT = process.env.PORT || 5000; 
+const PORT = process.env.PORT || 3200; 
 
 app.listen(PORT, () => console.log(`server running on ${PORT}`))
