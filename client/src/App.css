@@ -16,6 +16,13 @@
 .mh-100vh { 
   min-height: 100vh;
 }
+.alert-fixed {
+  position:fixed; 
+  padding-top: 5px;
+  margin: auto; 
+  width: 100%;
+  z-index:9999; 
+}
 
 @keyframes App-logo-spin {
   from {
