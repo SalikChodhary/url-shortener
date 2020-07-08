@@ -18,8 +18,10 @@ function App() {
   const [customId, setCustomId] = useState("");
   const [alert, setAlert] = useState(undefined);
   const [links, setLinks] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const BaseUrl = "http://localhost:3000/sm/";
+  const BaseUrl =
+    process.env.NODE_ENV === "development" ? "http://localhost:3200/" : "";
 
   const handleSubmit = (e) => {
     const form = e.currentTarget;
@@ -28,7 +30,6 @@ function App() {
     if (form.checkValidity() === false) e.stopPropagation();
     else requestShortUrl(longUrl, customId);
 
-    console.log(longUrl);
     setValidated(true);
   };
 
@@ -39,8 +40,9 @@ function App() {
   };
 
   const requestShortUrl = (longUrl, customId) => {
+    setLoading(true);
     axios
-      .post("http://localhost:3200/api/url/shorten", {
+      .post(BaseUrl + "api/url/shorten", {
         longUrl: longUrl,
         customId: customId,
       })
@@ -53,10 +55,12 @@ function App() {
           ...links,
           { longUrl: res.data.longUrl, shortUrl: res.data.shortUrl },
         ]);
+        setLoading(false);
         resetForm();
       })
       .catch((err) => {
         setAlert({ message: err.response.data, variant: "danger" });
+        setLoading(false);
         resetForm();
       });
   };
@@ -101,7 +105,7 @@ function App() {
             type="text"
             value={longUrl}
             onChange={(e) => setLongUrl(e.target.value)}
-            placeholder="Example: https://getbootstrap.com/"
+            placeholder="Example: https://some-link.com/example"
           />
           <Form.Control.Feedback type="invalid">
             This is a required field!
@@ -111,7 +115,7 @@ function App() {
           <Form.Label>Custom ID</Form.Label>
           <InputGroup>
             <InputGroup.Prepend>
-              <InputGroup.Text>{BaseUrl}</InputGroup.Text>
+              <InputGroup.Text>scmini.herokuapp.com/</InputGroup.Text>
             </InputGroup.Prepend>
 
             <Form.Control
@@ -130,29 +134,29 @@ function App() {
         >
           Clear
         </Button>
-        <Button type="submit" className="btn-lg btn-block">
+        <Button type="submit" className="btn-lg btn-block" disabled={loading}>
           Create Short URL
         </Button>
         {links.length > 0 && (
-        <Table striped responsive variant="dark" className="margin-top-15px">
-          <thead>
-            <tr>
-              <th>Short URL</th>
-              <th>Long URL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {links.map((link, i) => (
-              <tr key={i}>
-                <td>
-                  <a href={link.shortUrl}>{link.shortUrl}</a>
-                </td>
-                <td>{link.longUrl}</td>
+          <Table striped responsive variant="dark" className="margin-top-15px">
+            <thead>
+              <tr>
+                <th>Short URL</th>
+                <th>Long URL</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
+            </thead>
+            <tbody>
+              {links.map((link, i) => (
+                <tr key={i}>
+                  <td>
+                    <a href={link.shortUrl}>{link.shortUrl}</a>
+                  </td>
+                  <td>{link.longUrl}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Form>
     </Container>
   );
