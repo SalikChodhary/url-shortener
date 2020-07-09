@@ -66,7 +66,8 @@ function App() {
   };
   return (
     <Container fluid className="bg-dark mh-100vh">
-      {alert && (
+      {/* Commented for future reference */}
+      {/* {alert && (
         <Row className="alert-fixed w-100 justify-content-center">
           <Col xl={6} large={12} sm={12} md={12}>
             <Alert
@@ -79,7 +80,7 @@ function App() {
             </Alert>
           </Col>
         </Row>
-      )}
+      )} */}
 
       <Form
         noValidate
@@ -98,6 +99,16 @@ function App() {
             </Col>
           </Row>
         </Container>
+        {alert && (
+          <Alert
+            dismissible
+            variant={alert.variant}
+            className="local-max-width-alert mb-2"
+            onClose={() => setAlert(undefined)}
+          >
+            {alert.message}
+          </Alert>
+        )}
         <Form.Group>
           <Form.Label>Long URL</Form.Label>
           <Form.Control
@@ -115,7 +126,7 @@ function App() {
           <Form.Label>Custom ID</Form.Label>
           <InputGroup>
             <InputGroup.Prepend>
-              <InputGroup.Text>scmini.herokuapp.com/</InputGroup.Text>
+              <InputGroup.Text>scmini.herokuapp.com/sm/</InputGroup.Text>
             </InputGroup.Prepend>
 
             <Form.Control
