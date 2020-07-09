@@ -1,5 +1,5 @@
 # SCmini 
-A full stack URL shortener app.
+A full stack URL shortener web app.
 
 [scmini.herokuapp.com](https://scmini.herokuapp.com/)
 # Stack
